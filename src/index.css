@@ -1,0 +1,122 @@
+/* ==========================================================
+   index.css: global styles for the Japanese-style portfolio
+   ----------------------------------------------------------
+   1. Fonts
+   2. Tailwind (v3 directives)
+   3. Base: page colors, safe areas, paper-dot texture
+   4. Animations and helper classes
+   5. Reduced-motion support
+
+   TAILWIND v4 USERS: replace the three @tailwind lines with
+       @import "tailwindcss";
+       @custom-variant dark (&:where(.dark, .dark *));
+   ========================================================== */
+
+/* 1. FONTS (must stay at the very top of the file) */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700&display=swap");
+
+/* 2. TAILWIND */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ----------------------------------------------------------
+   3. BASE
+   ---------------------------------------------------------- */
+
+/* Keeps content clear of phone notches and system bars */
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Light theme: warm paper background, ink text */
+body {
+  background: #f6f1e7;
+  color: #1c1917;
+  font-family: "Noto Sans JP", system-ui, sans-serif;
+}
+
+/* Dark theme: applies when <html> has the "dark" class */
+.dark body {
+  background: #14110f;
+  color: #f5eee2;
+}
+
+/* Subtle washi-paper dot texture behind everything */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.5;
+  background-image: radial-gradient(currentColor 0.5px, transparent 0.5px);
+  background-size: 22px 22px;
+  color: rgba(120, 100, 80, 0.18);
+}
+
+/* ----------------------------------------------------------
+   4. ANIMATIONS
+   ---------------------------------------------------------- */
+
+/* Shared fade-and-slide-up keyframes */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Page transition: put on the wrapper that changes per route */
+.page {
+  animation: pageIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Staggered entrance for cards, chips and headings
+   (set animation-delay inline to stagger) */
+.rise {
+  animation: pageIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Gentle floating motion for the home "sun" circle */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Full-screen menu: circular reveal from the bottom-right seal button */
+@keyframes overlay {
+  from { opacity: 0; clip-path: circle(0% at 92% 92%); }
+  to   { opacity: 1; clip-path: circle(150% at 92% 92%); }
+}
+.overlay {
+  animation: overlay 0.6s ease-out both;
+}
+
+@keyframes overlayClose {
+  from { opacity: 1; clip-path: circle(150% at 92% 92%); }
+  to   { opacity: 0; clip-path: circle(0% at 92% 92%); }
+}
+.overlay-closing {
+  animation: overlayClose 0.6s ease-in both;
+}
+
+/* Vertical Japanese-style text (used for the current-page label) */
+.vert {
+  writing-mode: vertical-rl;
+}
+
+/* ----------------------------------------------------------
+   5. REDUCED MOTION: respect the visitor's system setting
+   ---------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
